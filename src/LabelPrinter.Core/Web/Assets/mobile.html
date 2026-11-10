@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b5fff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RetroLabel">
+<title>RetroLabel</title>
+<link rel="manifest" href="/m/manifest.webmanifest">
+<link rel="icon" href="/m/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/m/icon-192.png">
+<link rel="stylesheet" href="/m/m.css">
+</head>
+<body>
+<header><b>RetroLabel</b><span id="pstat" class="pill">…</span></header>
+<main>
+  <section id="pairView" hidden>
+    <h1>Connect this phone</h1>
+    <p>On the PC open <b>Phone</b> → <b>Show pairing QR code</b> and scan it, or type the code.</p>
+    <label>Name for this phone<input id="devName" maxlength="40" autocomplete="off"></label>
+    <label>Pairing code<input id="pairCode" autocapitalize="characters" autocomplete="off" maxlength="12" placeholder="ABCD234567"></label>
+    <button id="pairBtn" class="primary">Pair</button>
+    <p id="pairErr" class="err" hidden></p>
+  </section>
+
+  <section id="mainView" hidden>
+    <button id="pick" class="primary big">Choose label PDF</button>
+    <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+
+    <div id="docCard" class="card" hidden>
+      <div class="row"><b id="docName"></b><span class="grow"></span><span id="pgInfo" class="muted"></span></div>
+      <div class="wrap"><img id="preview" alt="Label preview"></div>
+      <div id="pager" class="row" hidden><button id="prev">‹ Prev</button><span class="grow"></span><button id="next">Next ›</button></div>
+      <div class="row"><button id="cropBtn">✂ Crop…</button><span class="muted small grow" id="cropNote"></span></div>
+      <label class="row chk" id="allRow" hidden><input type="checkbox" id="allPages" checked> Print all pages</label>
+      <ul id="warn" class="warn"></ul>
+      <div class="row">
+        <span>Copies</span><span class="grow"></span>
+        <button id="minus" class="sq">−</button><input id="copies" type="number" inputmode="numeric" min="1" max="99" value="1"><button id="plus" class="sq">+</button>
+      </div>
+      <button id="print" class="primary big">Print</button>
+    </div>
+
+    <h2>Recent</h2>
+    <div id="jobs"></div>
+    <p class="muted small" id="approvalNote" hidden>Jobs from this phone wait for approval on the PC before printing.</p>
+    <details class="card" id="shortcutCard">
+      <summary><b>📲 Print from the Share button (iPhone)</b></summary>
+      <p class="small">Set this up once. After that, open any label PDF (Mail, Safari, Files, eBay…), tap <b>Share → Print on LP2443</b>, and it prints. Same Wi-Fi as the PC.</p>
+      <ol class="small steps">
+        <li>Open the <b>Shortcuts</b> app → <b>+</b> (new shortcut). Name it <b>Print on LP2443</b>.</li>
+        <li>Tap the <b>ⓘ</b> (info) button → turn on <b>Show in Share Sheet</b>. Set "Receives" to <b>PDFs</b> (or Files).</li>
+        <li>Add action <b>Get Contents of URL</b>. URL: <button class="link copy" data-copy="url">copy</button><br><code id="scUrl"></code></li>
+        <li>In that action tap <b>Show More</b>: Method <b>POST</b>. Headers: add <b>Authorization</b> = <button class="link copy" data-copy="auth">copy</button> (starts with "Bearer").</li>
+        <li>Request Body: <b>File</b> → pick <b>Shortcut Input</b>.</li>
+        <li>Add action <b>Show Notification</b> with <b>Contents of URL</b> (shows "Printing 1 label…").</li>
+      </ol>
+      <p class="muted small">The shortcut uses this phone's pairing key: if you "Forget this phone" or revoke it on the PC, set the header again. Android: the free <i>HTTP Shortcuts</i> app can do the same POST.</p>
+    </details>
+    <p class="muted small"><button id="unpair" class="link">Forget this phone</button></p>
+  </section>
+  <div id="toast" class="toast" hidden></div>
+<div id="cropModal" class="cropmodal" hidden>
+  <div class="cropbox">
+    <div class="croprow"><b>Crop: drag a box around what you want to print</b><span class="grow"></span>
+      <button id="cropPrev" class="small">‹</button><span id="cropPg"></span><button id="cropNext" class="small">›</button></div>
+    <div id="cropStage" class="cropstage"><img id="cropImg" alt="PDF page"><div id="cropRect" class="croprect" hidden></div></div>
+    <div class="croprow small"><span id="cropSize">Drag on the page. The area is scaled to fill the 4×6 label.</span></div>
+    <div class="croprow">
+      <button id="cropUse" class="primary">Print only this area</button>
+      <button id="cropAdd">Add as another label</button>
+      <button id="cropReset">Back to automatic</button>
+      <span class="grow"></span><button id="cropCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+</main>
+<script src="/m/m.js"></script>
+</body>
+</html>

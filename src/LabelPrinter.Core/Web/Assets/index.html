@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RetroLabel LP2443</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="2" width="18" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 7h10M7 11h6M7 15h10" stroke="currentColor" stroke-width="2"/></svg><span>RetroLabel</span><span class="muted small" style="font-weight:400">LP2443</span></div>
+  <nav id="tabs" role="tablist">
+    <button role="tab" data-tab="print" class="on">Print</button>
+    <button role="tab" data-tab="history">History <span id="badge" class="badge" hidden></span></button>
+    <button role="tab" data-tab="settings">Settings</button>
+    <button role="tab" data-tab="phone">Phone</button>
+    <button role="tab" data-tab="diag">Diagnostics</button>
+  </nav>
+  <div class="grow"></div>
+  <div id="printerChip" class="chip" title="Selected printer">No printer</div>
+  <button id="stopBtn" class="stop" title="Cancel all waiting labels and cut off the one being sent">■ STOP</button>
+  <button id="rescueBtn" class="ghost" title="Labels come out as code (q812, D8…) or symbols? Stop and switch the printer back to label mode.">Printing garbage?</button>
+  <button id="quit" class="ghost" title="Stop the app. Phone printing also stops.">Quit</button>
+</header>
+
+<div id="safeBanner" class="banner safe" hidden>
+  <b>Paper-safe mode.</b> PDFs are held until the printer passes one small test.
+  <button id="safeTest" class="small primary">1. Send raw text test</button>
+  <span class="small">Look at the label. <b>Correct</b> = "RAW EPL2 PATH OK" + 2 short lines and <b>nothing else</b>.
+  If you also see lines like <code>q812</code>, <code>D8</code>, <code>P1</code> or odd symbols, the printer is in Line Mode.</span>
+  <button id="safeYes" class="small">Correct: only the message</button>
+  <button id="safeNo" class="small">It printed code lines / symbols</button>
+</div>
+<div id="updateBanner" class="banner" hidden></div>
+<div id="approvals" class="banner" hidden></div>
+<div id="toast" class="toast" hidden></div>
+<div id="cropModal" class="cropmodal" hidden>
+  <div class="cropbox">
+    <div class="croprow"><b>Crop: drag a box around what you want to print</b><span class="grow"></span>
+      <button id="cropPrev" class="small">‹</button><span id="cropPg"></span><button id="cropNext" class="small">›</button></div>
+    <div id="cropStage" class="cropstage"><img id="cropImg" alt="PDF page"><div id="cropRect" class="croprect" hidden></div></div>
+    <div class="croprow small"><span id="cropSize">Drag on the page. The area is scaled to fill the 4×6 label.</span></div>
+    <div class="croprow">
+      <button id="cropUse" class="primary">Print only this area</button>
+      <button id="cropAdd">Add as another label</button>
+      <button id="cropReset">Back to automatic</button>
+      <span class="grow"></span><button id="cropCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<main>
+<!-- PRINT -->
+<section id="tab-print" class="tab on">
+  <div class="print-grid">
+    <div class="stage-col">
+      <div id="drop" class="drop" tabindex="0">
+        <div id="dropEmpty" class="drop-empty">
+          <div class="big">Drop a 4×6 label PDF here</div>
+          <div class="muted">or</div>
+          <button id="openBtn" class="primary">Open PDF…</button>
+          <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+        </div>
+        <div id="stage" class="stage" hidden>
+          <button id="zoomBtn" class="small zoom-btn" title="Show every printer dot at full size">Zoom: actual dots</button>
+          <div class="label-wrap" id="labelWrap">
+            <img id="preview" alt="Label preview" draggable="false">
+            <div id="printableMask" class="mask"></div>
+          </div>
+        </div>
+      </div>
+      <div id="pager" class="pager" hidden>
+        <button id="prevPg" class="ghost">‹</button><span id="pgInfo"></span><button id="nextPg" class="ghost">›</button>
+        <span class="grow"></span>
+        <label class="inline"><input type="checkbox" id="allPages" checked> Print all pages</label>
+      </div>
+      <div id="bcCheck" class="bccheck" hidden></div>
+      <div id="previewInfo" class="info muted"></div>
+      <ul id="warnings" class="warnings"></ul>
+    </div>
+
+    <aside class="side">
+      <div class="card">
+        <div class="row between"><b id="docName">No PDF loaded</b><button id="closeDoc" class="ghost small" hidden>Clear</button></div>
+        <div class="muted small" id="docMeta">Each PDF page prints as its own label.</div>
+        <label class="field">Copies
+          <div class="stepper"><button id="cMinus" class="ghost">−</button><input id="copies" type="number" min="1" max="99" value="1"><button id="cPlus" class="ghost">+</button></div>
+        </label>
+        <div class="row gap">
+          <label class="inline"><input type="checkbox" id="autoRot"> Auto-rotate</label>
+          <button id="rot90" class="ghost small" title="Rotate the page a further 90° clockwise">Rotate 90°</button>
+          <button id="cropBtn" class="ghost small" title="Draw your own box around what to print" disabled>Crop…</button>
+        </div>
+        <button id="printBtn" class="primary xl" disabled>Print</button>
+      </div>
+      <div class="card">
+        <div class="row gap wrap">
+          <button id="testBtn">Test label</button>
+          <button id="reprintBtn">Reprint last</button>
+        </div>
+        <div class="muted small">Test label prints rulers, a barcode and a graphics block to check alignment and bit polarity.</div>
+      </div>
+      <div class="card"><b>Recent</b><div id="recent" class="recent"></div></div>
+    </aside>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="tab-history" class="tab">
+  <div class="row between"><h2>Print history</h2><button id="clearHist" class="ghost">Clear finished</button></div>
+  <div id="histList"></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="tab-settings" class="tab">
+  <h2>Settings</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Printer</h3>
+      <label class="field">Print method
+        <select id="s_backend">
+          <option value="DirectUsb">Direct to printer over USB (built-in driver, recommended)</option>
+          <option value="RawEpl2">Through a Windows printer queue (RAW EPL2)</option>
+          <option value="WindowsDriverGdi">Windows driver (GDI bitmap)</option>
+          <option value="SaveToFile">Save EPL2 to a file (no printing)</option>
+        </select>
+      </label>
+      <label class="field" id="f_usb">Printer (USB adapter)
+        <div class="row gap"><select id="s_usb"></select><button id="refreshPrinters" class="ghost small">Refresh</button></div>
+      </label>
+      <label class="field" id="f_queue">Windows printer queue
+        <select id="s_printer"></select>
+      </label>
+      <label class="field" id="f_file">Save to folder
+        <input id="s_file" type="text" placeholder="C:\Temp\epl">
+      </label>
+      <p class="muted small" id="backendHelp"></p>
+    </div>
+
+    <div class="card">
+      <h3>Label</h3>
+      <div class="grid2">
+        <label class="field">Width (in)<input id="s_lw" type="number" step="0.01" min="1" max="4.5"></label>
+        <label class="field">Height (in)<input id="s_lh" type="number" step="0.01" min="1" max="12"></label>
+        <label class="field">Media
+          <select id="s_media"><option value="Gap">Die-cut (gap)</option><option value="Continuous">Continuous</option><option value="BlackMark">Black mark</option></select>
+        </label>
+        <label class="field">Gap (dots)<input id="s_gap" type="number" min="0" max="200"></label>
+        <label class="field">Printable width (dots)<input id="s_pw" type="number" min="200" max="1000"></label>
+      </div>
+      <p class="muted small">4.00 × 6.00 in = 812 × 1218 dots at 203 dpi. Printable width 832 dots (4.09 in) is the LP/TLP 28xx-family figure and is <b>not yet verified</b> for your LP 2443.</p>
+    </div>
+
+    <div class="card">
+      <h3>Placement</h3>
+      <div class="grid2">
+        <label class="field">Scaling
+          <select id="s_smode"><option value="ActualSize">Actual size (safe)</option><option value="FitToLabel">Fit to label</option></select>
+        </label>
+        <label class="field">Scale %<input id="s_scale" type="number" min="10" max="400" step="0.5"></label>
+        <label class="field">Rotation
+          <select id="s_rot"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select>
+        </label>
+        <label class="field">Anchor
+          <select id="s_anchor"><option value="TopLeft">Top-left</option><option value="Center">Centered</option></select>
+        </label>
+        <label class="field">X offset (dots)<input id="s_ox" type="number" min="-400" max="400"></label>
+        <label class="field">Y offset (dots)<input id="s_oy" type="number" min="-400" max="400"></label>
+      </div>
+      <div class="nudge">
+        <span class="muted small">Nudge</span>
+        <button data-n="-1,0" class="ghost">←</button><button data-n="1,0" class="ghost">→</button>
+        <button data-n="0,-1" class="ghost">↑</button><button data-n="0,1" class="ghost">↓</button>
+        <select id="nudgeStep"><option>1</option><option selected>4</option><option>8</option><option>16</option></select><span class="muted small">dots (8 dots ≈ 1 mm)</span>
+      </div>
+      <label class="inline"><input type="checkbox" id="s_auto"> Auto-rotate pages whose orientation differs from the label</label>
+      <label class="inline"><input type="checkbox" id="s_crop"> Auto-crop labels out of full-page PDFs (Amazon/UPS returns etc.) and scale them to fill the label</label>
+    </div>
+
+    <div class="card">
+      <h3>Print quality</h3>
+      <div class="grid2">
+        <label class="field">Darkness (0-15)<input id="s_den" type="number" min="0" max="15"></label>
+        <label class="field">Speed (1-4)<input id="s_spd" type="number" min="1" max="4"></label>
+        <label class="field">Black/white threshold<input id="s_thr" type="range" min="40" max="220"><span class="muted small" id="thrVal"></span></label>
+        <label class="field">Render smoothing
+          <select id="s_ss"><option value="4">High (4×, best bars)</option><option value="2">Medium (2×)</option><option value="1">Off (1×, fastest)</option></select>
+        </label>
+        <label class="field">Direction
+          <select id="s_dir"><option value="false">Normal (ZT)</option><option value="true">Rotated 180° (ZB)</option></select>
+        </label>
+      </div>
+      <label class="inline"><input type="checkbox" id="s_inv"> Negative image (white on black)</label>
+      <label class="inline"><input type="checkbox" id="s_gw"> GW graphics: 0-bits are black (EPL2)</label>
+      <p class="muted small">Darkness and speed are EPL2 <code>D</code>/<code>S</code> commands, used only by the RAW EPL2 method. With the Windows-driver method set them in the driver's preferences.</p>
+    </div>
+
+    <div class="card">
+      <h3>Downloads folder</h3>
+      <label class="inline"><input type="checkbox" id="s_watch"> Open new label PDFs automatically when they're saved</label>
+      <label class="field">Folder to watch (blank = your Downloads folder)<input id="s_watchdir" type="text" placeholder="C:\Users\you\Downloads"></label>
+      <label class="inline"><input type="checkbox" id="s_watchlabels"> Only PDFs that look like shipping labels (barcode, 4×6 page, or cut-line box)</label>
+      <p class="muted small" id="watchStatus"></p>
+      <p class="muted small">Nothing prints by itself: the label opens in the window, already cropped, and you press Print.</p>
+    </div>
+    <div class="card">
+      <h3>Phone printing &amp; storage</h3>
+      <label class="field">Delete stored PDFs after (hours)<input id="s_ret" type="number" min="1" max="720"></label>
+      <label class="inline"><input type="checkbox" id="s_startup"> Start with Windows (runs in the background, no window)</label>
+      <label class="inline"><input type="checkbox" id="s_updates"> Check GitHub for new versions (only shows a message; never installs by itself)</label>
+    </div>
+
+    <div class="card">
+      <h3>Calibration help</h3>
+      <ol class="help">
+        <li>Load 4×6 labels, then press <b>Test label</b>. A frame should touch all four label edges.</li>
+        <li>The GW block must be <b>solid black</b>. If it's white or the page looks inverted, toggle "GW graphics: 0-bits are black".</li>
+        <li>Frame cut off on one side? Use the nudge arrows (X/Y offsets). 8 dots ≈ 1 mm.</li>
+        <li>Labels skip or the printer feeds a few inches? The printer must re-learn the gap/label length. Follow the <i>media calibration</i> steps in the LP 2443 user guide, then print the test label again.</li>
+        <li>Too light/dark: change Darkness. Smeared barcode: lower Speed.</li>
+        <li>Scan the Code 128 on the test label with your phone or a handheld scanner.</li>
+      </ol>
+      <div class="row gap"><button id="testBtn2">Print test label</button><button id="resetCal" class="danger">Restore defaults</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHONE -->
+<section id="tab-phone" class="tab">
+  <h2>Phone printing</h2>
+  <div class="cols">
+    <div class="card">
+      <label class="inline big"><input type="checkbox" id="r_enable"> Allow paired phones on this network to print</label>
+      <div class="grid2">
+        <label class="field">Port<input id="r_port" type="number" min="1024" max="65535"></label>
+        <label class="field">Transport
+          <select id="r_https"><option value="false">HTTP (local network)</option><option value="true">HTTPS (self-signed certificate)</option></select>
+        </label>
+      </div>
+      <label class="inline"><input type="checkbox" id="r_approve"> Ask me on the PC before a phone's job prints</label>
+      <div id="r_status" class="muted small"></div>
+      <p class="muted small">Only paired phones can print and nothing else on this PC is exposed: not the printer port, file shares or this window.
+        For printing from outside your home, don't open your router. Put a private network (Tailscale) or an authenticated tunnel in front. See the README.</p>
+    </div>
+    <div class="card" id="pairCard">
+      <h3>Pair a phone</h3>
+      <button id="pairBtn" class="primary">Show pairing QR code</button>
+      <div id="pairOut" hidden>
+        <div id="qr" class="qr"></div>
+        <div class="muted small">Scan with the phone camera (same Wi-Fi). Code expires in <span id="pairTimer"></span>.</div>
+        <select id="pairUrl"></select>
+        <div class="muted small">Pairing code: <b id="pairCode"></b></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Paired phones</h3>
+      <div id="devList" class="muted">None yet.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNOSTICS -->
+<section id="tab-diag" class="tab">
+  <div class="row between"><h2>Diagnostics</h2>
+    <div class="row gap"><button id="dRefresh">Refresh</button><button id="dPnp">Scan Windows devices</button><button id="dCopy">Copy report</button></div></div>
+  <div id="dCards" class="cards"></div>
+  <div class="cols">
+    <div class="card"><h3>Findings</h3><ul id="dFindings" class="findings"></ul></div>
+    <div class="card"><h3>Send a test</h3>
+      <div class="row gap wrap"><button id="dMode">0. Fix "prints code as text" (exit Line Mode)</button><button id="dHello">1. Raw text test</button><button id="dLabel">2. Full test label</button></div>
+      <p class="muted small">Step 1 sends ~100 bytes of plain EPL2 text. If it prints, the whole path (queue → adapter → printer) works. Step 2 adds the graphics, barcode and frame.</p>
+      <h3>Windows queue</h3><div id="dQueue" class="muted">–</div>
+      <h3>Move queue to another USB port</h3>
+      <div class="row gap"><select id="dPorts"></select><button id="dMove">Move…</button></div>
+      <p class="muted small">If you plugged the adapter into a different USB socket and Windows created a new port (USB002 …), point your queue at it. Windows will ask for administrator permission.</p>
+    </div>
+    <div class="card"><h3>Line-mode protection</h3>
+      <p class="small">Status: <b id="healState">–</b></p>
+      <p class="muted small">When on, every job begins with the "switch to label mode" command, so if the printer ever slips into Line Mode
+        (printing code as text) it fixes itself on the next print. It turns on only after this test passes on <i>your</i> printer.</p>
+      <button id="healTest">Run protection test (prints 2 small labels)</button>
+      <button id="healOff" class="ghost small">Turn off</button>
+    </div>
+    <div class="card"><h3>All printers</h3><div id="dPrinters" class="muted small"></div></div>
+    <div class="card"><h3>USB / parallel ports</h3><div id="dPortsList" class="muted small"></div></div>
+    <div class="card wide"><h3>Windows devices</h3><pre id="dPnpOut" class="pre muted">Press “Scan Windows devices”.</pre></div>
+    <div class="card wide"><h3>Troubleshooting checklist</h3>
+      <ul class="help">
+        <li><b>Adapter:</b> USB into the PC, parallel end into the LP 2443's <i>wide 36-pin Centronics</i> connector (not the 9-pin serial). Printer powered on.</li>
+        <li><b>No USB00x port in Device Manager &gt; Ports?</b> Re-plug the adapter. See whether it appears under “Printers/USB Printing Support” or “Other devices”. Try a rear motherboard USB port, not a hub.</li>
+        <li><b>Queue offline / jobs stuck:</b> power-cycle the printer, re-seat the adapter, then cancel stuck jobs and print the raw text test.</li>
+        <li><b>Prints the commands as text (N, q812, Q1218,24 …) followed by symbols:</b> the printer is in Zebra's EPL <i>Line Mode</i>. Press “0. Fix prints code as text” once (sends ESC EPL2), power-cycle the printer, then run the raw text test.</li>
+        <li><b>Prints garbage characters:</b> the queue's driver is converting the data. Use the “Generic / Text Only” driver with the RAW method.</li>
+        <li><b>Prints a blank label or the wrong colours:</b> toggle “GW graphics: 0-bits are black”.</li>
+        <li><b>Moved the adapter to another USB socket:</b> see “Move queue to another USB port”.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="muted small" style="margin-top:14px">RetroLabel LP2443 v2.0.0 · MIT license · Works with Zebra/Eltron LP 2443 and other EPL2 printers. Not affiliated with or endorsed by Zebra Technologies.</p>
+</section>
+</main>
+<script src="/qr.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

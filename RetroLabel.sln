@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4E8982E-A67D-4391-A184-917F73F5A631}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrinter.Core", "src\LabelPrinter.Core\LabelPrinter.Core.csproj", "{7E1D1682-34BE-46C1-AC39-738C9F534E20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrinter.App", "src\LabelPrinter.App\LabelPrinter.App.csproj", "{C491D8CA-89F8-4549-8E84-E3AE3384AC27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{66173E31-5DB6-4505-A1F8-12BCEB2092BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabelPrinter.SelfTest", "tests\LabelPrinter.SelfTest\LabelPrinter.SelfTest.csproj", "{E7A67A8E-DE21-42CE-A6B0-EF85C81849AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E1D1682-34BE-46C1-AC39-738C9F534E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E1D1682-34BE-46C1-AC39-738C9F534E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E1D1682-34BE-46C1-AC39-738C9F534E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E1D1682-34BE-46C1-AC39-738C9F534E20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C491D8CA-89F8-4549-8E84-E3AE3384AC27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C491D8CA-89F8-4549-8E84-E3AE3384AC27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C491D8CA-89F8-4549-8E84-E3AE3384AC27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C491D8CA-89F8-4549-8E84-E3AE3384AC27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A67A8E-DE21-42CE-A6B0-EF85C81849AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A67A8E-DE21-42CE-A6B0-EF85C81849AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A67A8E-DE21-42CE-A6B0-EF85C81849AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A67A8E-DE21-42CE-A6B0-EF85C81849AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7E1D1682-34BE-46C1-AC39-738C9F534E20} = {F4E8982E-A67D-4391-A184-917F73F5A631}
+		{C491D8CA-89F8-4549-8E84-E3AE3384AC27} = {F4E8982E-A67D-4391-A184-917F73F5A631}
+		{E7A67A8E-DE21-42CE-A6B0-EF85C81849AB} = {66173E31-5DB6-4505-A1F8-12BCEB2092BF}
+	EndGlobalSection
+EndGlobal

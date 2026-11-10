@@ -1,0 +1,27 @@
+name: Build Windows installer
+# Builds, self-tests and publishes RetroLabel-Setup-<version>-x64.exe as a GitHub Release.
+on: { workflow_dispatch: {}, push: { branches: [main] } }
+permissions: { contents: write }
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Self-tests
+        run: dotnet run --project tests/LabelPrinter.SelfTest -c Release
+      - name: Publish self-contained
+        run: dotnet publish src/LabelPrinter.Desktop/LabelPrinter.Desktop.csproj -c Release -r win-x64 --self-contained true -o dist/publish
+      - name: Install NSIS
+        run: choco install nsis -y --no-progress
+      - name: Build installer
+        run: '& "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=2.0.0 /DSRCDIR="$PWD\dist\publish" installer\RetroLabel.nsi'
+      - uses: actions/upload-artifact@v4
+        with: { name: RetroLabel-Setup, path: installer/RetroLabel-Setup-*.exe }
+      - name: Publish as a GitHub Release (direct .exe download)
+        shell: pwsh
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          $tag = "v2.0.0-build${{ github.run_number }}"
+          gh release create $tag (Get-Item installer/RetroLabel-Setup-*.exe).FullName --title "RetroLabel LP2443 2.0.0 (build ${{ github.run_number }})" --notes "Download RetroLabel-Setup-2.0.0-x64.exe below and run it. Not affiliated with Zebra Technologies." --latest

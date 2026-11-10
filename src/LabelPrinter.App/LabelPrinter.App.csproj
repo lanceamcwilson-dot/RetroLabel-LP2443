@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>RetroLabel</AssemblyName>
+    <Product>RetroLabel LP2443</Product>
+    <Company>RetroLabel contributors</Company>
+    <Copyright>Copyright (c) 2026 RetroLabel contributors (MIT)</Copyright>
+    <RootNamespace>LabelPrinter.App</RootNamespace>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>2.0.0</Version>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LabelPrinter.Core\LabelPrinter.Core.csproj" />
+  </ItemGroup>
+</Project>

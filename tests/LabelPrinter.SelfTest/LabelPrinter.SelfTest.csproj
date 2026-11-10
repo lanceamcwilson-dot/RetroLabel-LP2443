@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LabelPrinter.Core\LabelPrinter.Core.csproj" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(NoZxing)' != 'true'">
+    <DefineConstants>$(DefineConstants);HAS_ZXING</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(NoZxing)' != 'true'">
+    <PackageReference Include="ZXing.Net" Version="0.16.9" />
+    <Compile Include="..\..\src\Shared\ZxingDecoder.cs" Link="ZxingDecoder.cs" />
+  </ItemGroup>
+</Project>

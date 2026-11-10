@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>RetroLabel</AssemblyName>
+    <Product>RetroLabel LP2443</Product>
+    <Company>RetroLabel contributors</Company>
+    <Copyright>Copyright (c) 2026 RetroLabel contributors (MIT)</Copyright>
+    <RootNamespace>LabelPrinter.Desktop</RootNamespace>
+    <ApplicationIcon>..\LabelPrinter.App\app.ico</ApplicationIcon>
+    <Version>2.0.0</Version>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LabelPrinter.Core\LabelPrinter.Core.csproj" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(NoZxing)' != 'true'">
+    <DefineConstants>$(DefineConstants);HAS_ZXING</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(NoZxing)' != 'true'">
+    <PackageReference Include="ZXing.Net" Version="0.16.9" />
+    <Compile Include="..\..\src\Shared\ZxingDecoder.cs" Link="ZxingDecoder.cs" />
+  </ItemGroup>
+</Project>

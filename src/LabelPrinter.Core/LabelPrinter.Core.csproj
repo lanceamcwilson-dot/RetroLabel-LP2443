@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>LabelPrinter.Core</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IsWinTarget Condition="'$(RuntimeIdentifier)' != '' And $(RuntimeIdentifier.StartsWith('win'))">true</IsWinTarget>
+    <IsWinTarget Condition="'$(RuntimeIdentifier)' == '' And $([MSBuild]::IsOSPlatform('Windows'))">true</IsWinTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <!-- PDFium (BSD/Apache, from pypdfium2 4.30.0 wheels / pdfium-binaries) next to the app -->
+    <None Include="..\..\native\win-x64\pdfium.dll" Link="pdfium.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(IsWinTarget)' == 'true'" />
+    <None Include="..\..\native\linux-x64\libpdfium.so" Link="libpdfium.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(IsWinTarget)' != 'true'" />
+    <None Include="..\..\native\PDFIUM-THIRD-PARTY-LICENSES.txt" Link="PDFIUM-THIRD-PARTY-LICENSES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <EmbeddedResource Include="Web\Assets\**\*" LogicalName="assets/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
