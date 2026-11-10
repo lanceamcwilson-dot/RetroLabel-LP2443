@@ -52,8 +52,13 @@
       <ol class="small steps">
         <li>Open the <b>Shortcuts</b> app → <b>+</b> (new shortcut). Name it <b>Print on LP2443</b>.</li>
         <li>Tap the <b>ⓘ</b> (info) button → turn on <b>Show in Share Sheet</b>. Set "Receives" to <b>PDFs</b> (or Files).</li>
-        <li>Add action <b>Get Contents of URL</b>. URL: <button class="link copy" data-copy="url">copy</button><br><code id="scUrl"></code></li>
-        <li>In that action tap <b>Show More</b>: Method <b>POST</b>. Headers: add <b>Authorization</b> = <button class="link copy" data-copy="auth">copy</button> (starts with "Bearer").</li>
+        <li>Add action <b>Get Contents of URL</b>. Tap <b>URL</b> and enter:
+          <input id="scUrlBox" class="keybox" readonly onclick="this.select()">
+          <button class="copybtn" data-copy="url">Copy address</button></li>
+        <li>Tap the <b>›</b> on that action: Method <b>POST</b>. <b>Headers → Add new header</b>: Key <code>Authorization</code>, Text = this phone's key:
+          <input id="scKey" class="keybox" readonly onclick="this.select()">
+          <button class="copybtn" data-copy="auth">Copy key</button>
+          <span class="muted small">If Copy doesn't work: press and hold in the box → <b>Select All</b> → <b>Copy</b>.</span></li>
         <li>Request Body: <b>File</b> → pick <b>Shortcut Input</b>.</li>
         <li>Add action <b>Show Notification</b> with <b>Contents of URL</b> (shows "Printing 1 label…").</li>
       </ol>

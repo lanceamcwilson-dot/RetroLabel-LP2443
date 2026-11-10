@@ -44,3 +44,6 @@ details.card summary{cursor:pointer}
 .steps{padding-left:18px}.steps li{margin:6px 0}
 code{word-break:break-all;background:#8882;padding:1px 4px;border-radius:4px;font-size:12px}
 .bc{font-size:13px;margin:6px 0;padding:6px 8px;border-radius:8px}.bc.ok{color:var(--ok)}.bc.bad{color:#fff;background:var(--bad);font-weight:700}
+
+.keybox{font:13px ui-monospace,Menlo,monospace;margin:6px 0;padding:10px;user-select:text;-webkit-user-select:text}
+.copybtn{min-height:38px;padding:6px 14px;font-size:14px;margin:2px 0 4px}

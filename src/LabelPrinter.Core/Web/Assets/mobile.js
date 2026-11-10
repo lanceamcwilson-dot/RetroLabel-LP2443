@@ -19,7 +19,7 @@ async function api(path, opts = {}) {
   return data;
 }
 function forget() { token = null; try { localStorage.removeItem(KEY); } catch {} show(); }
-function show() { $('pairView').hidden = !!token; $('mainView').hidden = !token; if (token) poll(); }
+function show() { $('pairView').hidden = !!token; $('mainView').hidden = !token; if (token) poll(); try { fillShortcut(); } catch {} }
 
 // ---------- pairing ----------
 const guess = () => /iPhone/.test(navigator.userAgent) ? 'iPhone' : /iPad/.test(navigator.userAgent) ? 'iPad' : /Android/.test(navigator.userAgent) ? 'Android phone' : 'Phone';
@@ -154,12 +154,25 @@ async function poll() {
   } catch (e) { $('pstat').textContent = 'PC unreachable'; $('pstat').className = 'pill bad'; }
   busy = false;
 }
-$('scUrl').textContent = location.origin + '/api/m/quickprint';
-document.querySelectorAll('.copy').forEach(b => b.onclick = async (e) => {
-  e.preventDefault();
-  const v = b.dataset.copy === 'url' ? location.origin + '/api/m/quickprint' : 'Bearer ' + (token || '');
-  try { await navigator.clipboard.writeText(v); toast('Copied'); }
-  catch { prompt('Copy this:', v); }
+const scUrl = location.origin + '/api/m/quickprint';
+function fillShortcut() { $('scUrlBox').value = scUrl; $('scKey').value = token ? 'Bearer ' + token : '(pair this phone first)'; }
+fillShortcut();
+// iPhones block navigator.clipboard on plain-http pages; the old execCommand('copy') on a selected field still works there.
+function copyText(v, box) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(v).then(() => true, () => legacyCopy(v, box));
+  return Promise.resolve(legacyCopy(v, box));
+}
+function legacyCopy(v, box) {
+  try {
+    box.removeAttribute('readonly'); box.value = v; box.focus(); box.setSelectionRange(0, v.length);
+    const ok = document.execCommand('copy'); box.setAttribute('readonly', ''); box.blur(); return ok;
+  } catch { return false; }
+}
+document.querySelectorAll('[data-copy]').forEach(b => b.onclick = async (e) => {
+  e.preventDefault(); fillShortcut();
+  const isUrl = b.dataset.copy === 'url', box = isUrl ? $('scUrlBox') : $('scKey');
+  const ok = await copyText(box.value, box);
+  toast(ok ? (isUrl ? 'Address copied' : 'Key copied: paste it as the header Text') : 'Press and hold in the box, then Select All → Copy', !ok);
 });
 setInterval(poll, 2000); document.addEventListener('visibilitychange', poll);
 show();
