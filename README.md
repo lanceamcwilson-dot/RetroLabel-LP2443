@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/hero.svg" alt="RetroLabel: retro desktop label printer illustration" width="100%"></p>
+<p align="center"><img src="docs/images/hero-16bit.png" alt="RetroLabel: 16-bit pixel-art banner of a retro desktop label printer" width="100%"></p>
 
 # RetroLabel LP2443
 
