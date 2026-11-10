@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" width="1200" height="440" role="img" aria-label="RetroLabel: a retro desktop thermal label printer printing a shipping label in front of a striped sunset">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1633"/>
+      <stop offset="1" stop-color="#3a1f4d"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd35c"/>
+      <stop offset="0.55" stop-color="#ff8a3d"/>
+      <stop offset="1" stop-color="#ff3d7f"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1ead9"/>
+      <stop offset="1" stop-color="#d8ccb2"/>
+    </linearGradient>
+    <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8dfca"/>
+      <stop offset="1" stop-color="#cbbd9f"/>
+    </linearGradient>
+    <clipPath id="sunclip"><circle cx="830" cy="250" r="150"/></clipPath>
+    <clipPath id="frame"><rect x="0" y="0" width="1200" height="440" rx="22"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect width="1200" height="440" fill="url(#sky)"/>
+    <!-- stars -->
+    <g fill="#fff" opacity=".7">
+      <circle cx="80" cy="60" r="1.6"/><circle cx="210" cy="120" r="1.2"/><circle cx="320" cy="40" r="1.4"/><circle cx="520" cy="80" r="1.1"/>
+      <circle cx="610" cy="30" r="1.5"/><circle cx="1060" cy="70" r="1.6"/><circle cx="1130" cy="150" r="1.1"/><circle cx="980" cy="40" r="1.2"/>
+    </g>
+    <!-- striped sunset sun -->
+    <g clip-path="url(#sunclip)">
+      <rect x="680" y="100" width="300" height="300" fill="url(#sun)"/>
+      <g fill="#2b1a40">
+        <rect x="680" y="262" width="300" height="5"/><rect x="680" y="280" width="300" height="8"/>
+        <rect x="680" y="300" width="300" height="11"/><rect x="680" y="323" width="300" height="14"/>
+        <rect x="680" y="349" width="300" height="18"/>
+      </g>
+    </g>
+    <!-- perspective grid floor -->
+    <rect x="0" y="330" width="1200" height="110" fill="#22123a"/>
+    <g stroke="#ff3d7f" stroke-width="2" opacity=".55">
+      <line x1="0" y1="330" x2="1200" y2="330"/><line x1="0" y1="345" x2="1200" y2="345"/><line x1="0" y1="364" x2="1200" y2="364"/>
+      <line x1="0" y1="390" x2="1200" y2="390"/><line x1="0" y1="425" x2="1200" y2="425"/>
+      <line x1="830" y1="330" x2="830" y2="440"/><line x1="760" y1="330" x2="640" y2="440"/><line x1="900" y1="330" x2="1020" y2="440"/>
+      <line x1="690" y1="330" x2="450" y2="440"/><line x1="970" y1="330" x2="1210" y2="440"/><line x1="620" y1="330" x2="260" y2="440"/>
+      <line x1="1040" y1="330" x2="1400" y2="440"/><line x1="550" y1="330" x2="70" y2="440"/>
+    </g>
+
+    <!-- ===== the printer (original drawing of a generic 2000-era desktop label printer) ===== -->
+    <g transform="translate(700 150)">
+      <!-- shadow -->
+      <ellipse cx="130" cy="190" rx="165" ry="16" fill="#000" opacity=".35"/>
+      <!-- base -->
+      <rect x="-20" y="98" width="300" height="88" rx="16" fill="url(#body)" stroke="#2b1a40" stroke-width="4"/>
+      <!-- domed lid -->
+      <path d="M -10 104 C -10 30, 40 6, 130 6 C 220 6, 270 30, 270 104 Z" fill="url(#lid)" stroke="#2b1a40" stroke-width="4"/>
+      <path d="M 18 92 C 22 44, 58 26, 130 26 C 202 26, 238 44, 242 92" fill="none" stroke="#fff" stroke-width="4" opacity=".55"/>
+      <!-- lid seam + badge -->
+      <rect x="-20" y="98" width="300" height="10" fill="#2b1a40" opacity=".18"/>
+      <rect x="92" y="58" width="76" height="20" rx="4" fill="#2b1a40"/>
+      <text x="130" y="73" text-anchor="middle" font-family="ui-monospace,Consolas,Menlo,monospace" font-size="13" font-weight="700" fill="#ffd35c" letter-spacing="2">RETRO</text>
+      <!-- front panel: LED + feed button -->
+      <circle cx="18" cy="134" r="7" fill="#3cff8f" stroke="#2b1a40" stroke-width="3"/>
+      <circle cx="18" cy="134" r="13" fill="#3cff8f" opacity=".25"/>
+      <rect x="2" y="152" width="34" height="18" rx="6" fill="#bfb194" stroke="#2b1a40" stroke-width="3"/>
+      <text x="19" y="165" text-anchor="middle" font-family="ui-monospace,Consolas,Menlo,monospace" font-size="9" font-weight="700" fill="#2b1a40">FEED</text>
+      <!-- paper slot -->
+      <rect x="56" y="118" width="196" height="12" rx="5" fill="#2b1a40"/>
+      <!-- label coming out, tilted toward viewer -->
+      <g transform="translate(70 124) rotate(-4)">
+        <path d="M 0 0 L 168 0 L 172 132 L -4 132 Z" fill="#ffffff" stroke="#2b1a40" stroke-width="3"/>
+        <rect x="10" y="10" width="64" height="7" fill="#2b1a40"/>
+        <rect x="10" y="22" width="96" height="5" fill="#2b1a40" opacity=".75"/>
+        <rect x="10" y="31" width="80" height="5" fill="#2b1a40" opacity=".75"/>
+        <text x="124" y="30" font-family="ui-monospace,Consolas,Menlo,monospace" font-size="20" font-weight="800" fill="#2b1a40">4×6</text>
+        <rect x="10" y="44" width="150" height="3" fill="#2b1a40"/>
+        <!-- barcode -->
+        <g fill="#2b1a40">
+          <rect x="16" y="56" width="3" height="44"/><rect x="22" y="56" width="6" height="44"/><rect x="31" y="56" width="2" height="44"/>
+          <rect x="36" y="56" width="4" height="44"/><rect x="44" y="56" width="2" height="44"/><rect x="49" y="56" width="7" height="44"/>
+          <rect x="59" y="56" width="3" height="44"/><rect x="65" y="56" width="2" height="44"/><rect x="70" y="56" width="5" height="44"/>
+          <rect x="79" y="56" width="3" height="44"/><rect x="85" y="56" width="6" height="44"/><rect x="94" y="56" width="2" height="44"/>
+          <rect x="99" y="56" width="4" height="44"/><rect x="107" y="56" width="3" height="44"/><rect x="113" y="56" width="7" height="44"/>
+          <rect x="123" y="56" width="2" height="44"/><rect x="128" y="56" width="4" height="44"/><rect x="136" y="56" width="3" height="44"/>
+          <rect x="142" y="56" width="6" height="44"/><rect x="151" y="56" width="3" height="44"/>
+        </g>
+        <text x="84" y="116" text-anchor="middle" font-family="ui-monospace,Consolas,Menlo,monospace" font-size="10" fill="#2b1a40" letter-spacing="1.5">1Z RETRO 0000 2443</text>
+      </g>
+      <!-- parallel cable out the back -->
+      <path d="M 280 140 C 330 140, 330 200, 380 200 L 520 200" fill="none" stroke="#9aa0b5" stroke-width="8" stroke-linecap="round"/>
+      <rect x="268" y="126" width="22" height="28" rx="4" fill="#9aa0b5" stroke="#2b1a40" stroke-width="3"/>
+      <!-- motion lines -->
+      <g stroke="#ffd35c" stroke-width="4" stroke-linecap="round">
+        <line x1="-44" y1="150" x2="-62" y2="140"/><line x1="-44" y1="168" x2="-66" y2="168"/><line x1="-44" y1="186" x2="-62" y2="196"/>
+      </g>
+    </g>
+
+    <!-- title -->
+    <g font-family="ui-monospace,'Courier New',Consolas,Menlo,monospace" font-weight="800">
+      <text x="64" y="176" font-size="84" fill="#ff3d7f" letter-spacing="2">RetroLabel</text>
+      <text x="58" y="170" font-size="84" fill="#ffd35c" letter-spacing="2">RetroLabel</text>
+    </g>
+    <text x="62" y="222" font-family="ui-monospace,'Courier New',Consolas,Menlo,monospace" font-size="24" font-weight="700" fill="#f1ead9" letter-spacing="3">LP2443 · EPL2 · 203 DPI</text>
+    <text x="62" y="262" font-family="ui-monospace,'Courier New',Consolas,Menlo,monospace" font-size="17" fill="#c9b8e8" letter-spacing="1.5">PDF → 4×6 THERMAL LABEL · NO DRIVER · PHONE READY</text>
+    <g transform="translate(62 288)">
+      <rect width="300" height="32" rx="16" fill="#3cff8f"/>
+      <text x="150" y="21" text-anchor="middle" font-family="ui-monospace,'Courier New',Consolas,Menlo,monospace" font-size="14" font-weight="800" fill="#1b1633" letter-spacing="2">STILL PRINTING SINCE Y2K</text>
+    </g>
+  </g>
+</svg>

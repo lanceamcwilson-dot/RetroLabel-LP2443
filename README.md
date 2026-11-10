@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/images/hero.svg" alt="RetroLabel: retro desktop label printer illustration" width="100%"></p>
+
 # RetroLabel LP2443
 
 **Print 4×6 shipping labels from PDFs on a vintage Zebra/Eltron LP 2443, with no printer driver needed.**
