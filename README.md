@@ -19,6 +19,12 @@ The LP 2443 (Eltron "Orion", c. 1999–2002) is a tough little direct-thermal pr
 ended support for it long ago: today's Zebra driver doesn't list it, PCs no longer have parallel ports, and shipping sites
 hand out letter-size PDFs. RetroLabel deals with all of that.
 
+## Meet the hardware
+
+<p align="center"><img src="docs/images/lp2443-pixel.png" alt="Pixel-art photo of the author's LP 2443 printing its status label" width="300"></p>
+<p align="center"><sub>The author's LP 2443 (photo, pixelated). The status label coming out reads <b>"Line Mode 1.09"</b>:
+the plain-text mode that makes these printers print commands as gibberish. RetroLabel's <i>Printing garbage?</i> button fixes it.</sub></p>
+
 ## Features
 
 - **No driver, no Windows printer setup.** Talks directly to the USB printer-class device that a USB-to-parallel cable
